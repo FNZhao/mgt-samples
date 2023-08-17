@@ -16,6 +16,7 @@ import { HomePage } from '../pages/HomePage';
 import { FilesPage } from '../pages/FilesPage';
 import { TaxonomyPage } from '../pages/TaxonomyPage';
 import { CalendarByWeek } from '../pages/CalendarByWeek';
+import { ChannelFilesPage } from '../pages/ChannelFilesPage';
 
 export const getNavigation = (isSignedIn: boolean) => {
   let navItems: NavigationItem[] = [];
@@ -81,7 +82,7 @@ export const getNavigation = (isSignedIn: boolean) => {
       component: <SearchPage />,
       exact: false
     });
-
+    
     navItems.push({
       name: 'CalendarByWeek',
       url: '/calendarByWeek',
@@ -89,6 +90,16 @@ export const getNavigation = (isSignedIn: boolean) => {
       key: 'calendarByWeek',
       requiresLogin: true,
       component: <CalendarByWeek />,
+      exact: true
+    });
+
+    navItems.push({
+      name: 'ChannelFiles',
+      url: '/channelFiles',
+      icon: <DocumentBulletListMultiple24Regular />,
+      key: 'channelFiles',
+      requiresLogin: true,
+      component: <ChannelFilesPage />,
       exact: true
     });
   }
