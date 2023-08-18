@@ -138,7 +138,9 @@ export const ChannelFilesPage: React.FunctionComponent = () => {
             itemPath={selectedChannelName}
             pageSize={100}
             className={styles.channelFiles}
-          ></FileList>
+          >
+            <Loading template='loading'></Loading>
+          </FileList>
         ) : null}
       </div>
     </>
