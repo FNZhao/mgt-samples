@@ -1,36 +1,72 @@
 import * as React from 'react';
-import { FileList,
-  SelectedChannel,
+import { 
+  FileList,
   Get
 } from '@microsoft/mgt-react';
-import { makeStyles } from '@fluentui/react-components';
+import { makeStyles, Spinner } from '@fluentui/react-components';
 import { Tree, TreeItem, TreeItemLayout } from '@fluentui/react-tree';
 import { Loading } from '../components/Loading';
+import { PageHeader } from '../components/PageHeader';
 
 
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
 
-// const useStyles = makeStyles({
-  
-// });
+  teamChannel: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    width: '30%'
+  },
+
+  channelFiles: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    width: '70%',
+    '--file-list-box-shadow': 'none'
+  },
+
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '4vh'
+  },
+
+  loadingMessage: {
+    paddingLeft: '10px'
+  },
+});
 
 const MyTeams = (props) => {
   const teams = props.dataContext.value;
+  const { getSelectedTeamId } = props;
+  console.log(props);
+
+  const onTeamClick = (id) => {
+    getSelectedTeamId(id);
+  }
 
   return(
     <Tree>
       {teams && (
         teams.map((team) => (
-          <TreeItem itemType='branch'>
+          <TreeItem itemType='branch' onClick={() => onTeamClick(team.id)}>
             <TreeItemLayout>{team.displayName}</TreeItemLayout>
             <Tree>
               <Get
-              resource={`teams/${team.id}/channels`}
+                resource={`teams/${team.id}/channels`}
               >
-                <MyChannels template='value'></MyChannels>
-                <ChannelsLoading template='loading'>loading</ChannelsLoading>
+                <MyChannels template='value'
+                  getSelectedChannelName={props.getSelectedChannelName}
+                ></MyChannels>
+                <ChannelsLoading template='loading'></ChannelsLoading>
               </Get>
             </Tree>
-            
           </TreeItem>
         ))
       )}
@@ -39,49 +75,72 @@ const MyTeams = (props) => {
 }
 
 const ChannelsLoading = (props) => {
+  const styles = useStyles();
+
   return(
-    <div>
-      loading
+    <div className={styles.loading}>
+      <Spinner size='tiny'/>
+      <div className={styles.loadingMessage}>
+        <span>{props.message || 'Loading...'}</span>
+      </div>
     </div>
   );
 }
 
 const MyChannels = (props) => {
-  const channels = props.dataContext.value;
+  const { getSelectedChannelName } = props;
+  const { displayName } = props.dataContext;
+
+  const onChannelClick = () => {
+    getSelectedChannelName(displayName);
+  }
 
   return(
-    // <Tree>
-    //   {channels && (
-    //     channels.map((channel) => (
-          <TreeItem itemType='leaf'>
-            <TreeItemLayout style={{ marginLeft:'3vh' }}>{props.dataContext.displayName}</TreeItemLayout>
-          </TreeItem>
-      //   ))
-      // )}
-    // </Tree>
+    <TreeItem itemType='leaf' onClick={onChannelClick}>
+      <TreeItemLayout style={{ marginLeft:'3vh' }}>{displayName}</TreeItemLayout>
+    </TreeItem>
   );
 }
 
 export const ChannelFilesPage: React.FunctionComponent = () => {
-  const [selectedChannel, setSelectedChannel] = React.useState<SelectedChannel | null>(null);
-  //const styles = useStyles();
+  const styles = useStyles();
+  const [selectedTeamId, setSelectedTeamId] = React.useState('');
+  const [selectedChannelName, setSelectedChannelName] = React.useState('');
+
+  const getSelectedTeamId = (teamId) => {
+    setSelectedTeamId(teamId);
+  }
+  const getSelectedChannelName = (channelName) => {
+    setSelectedChannelName(channelName);
+  }
 
   return (
     <>
-      <Get
-        resource='/me/joinedTeams'
-      >
-        <MyTeams template='default'></MyTeams>
-        <Loading template='loading'></Loading>
-      </Get>
+      <PageHeader
+        title='Channel Files'
+        description='View files from access channels you are a member of'
+      ></PageHeader>
+      <div className={styles.container}>
+        <Get
+          resource='/me/joinedTeams'
+          className={styles.teamChannel}
+        >
+          <MyTeams template='default'
+            getSelectedTeamId={getSelectedTeamId}
+            getSelectedChannelName={getSelectedChannelName}
+          ></MyTeams>
+          <Loading template='loading'></Loading>
+        </Get>
 
-      {selectedChannel && (
-        <FileList
-          groupId={selectedChannel.team.id}
-          itemPath={selectedChannel.channel.displayName}
-          pageSize={100}
-        ></FileList>
-      )}
+        { selectedChannelName !== '' ? (
+          <FileList
+            groupId={selectedTeamId}
+            itemPath={selectedChannelName}
+            pageSize={100}
+            className={styles.channelFiles}
+          ></FileList>
+        ) : null}
+      </div>
     </>
   );
 };
