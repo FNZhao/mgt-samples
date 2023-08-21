@@ -94,7 +94,7 @@ export const getNavigation = (isSignedIn: boolean) => {
     });
 
     navItems.push({
-      name: 'ChannelFiles',
+      name: 'Channel Files',
       url: '/channelFiles',
       icon: <DocumentBulletListMultiple24Regular />,
       key: 'channelFiles',
