@@ -33,10 +33,6 @@ const useStyles = makeStyles({
     flexWrap: 'nowrap',
     width: '69%',
     '--file-list-box-shadow': 'none'
-  },
-
-  teamIcon: {
-
   }
 });
 
