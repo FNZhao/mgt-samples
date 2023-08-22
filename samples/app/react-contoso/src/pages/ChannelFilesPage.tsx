@@ -47,6 +47,8 @@ const ChannelsTree = (props) => {
     setSelectedTeamId, 
     setSelectedChannelName 
   } = props;
+  const styles = useStyles();
+
 
   const getChannels = async () => {
     setLoading(true);
@@ -81,13 +83,14 @@ const ChannelsTree = (props) => {
           onClick={() => {
             getSelectedTeamChannel(channel.displayName, channel.id)
           }}
-          aside={
-            (selectedChannelId === channel.id && selectedTeamId === teamId) ? 
-            <ChevronRightRegular /> : null
-          }
         >
-          <TreeItemLayout style={{ marginLeft: '1.2vh' }}>
-            {channel.displayName}
+          <TreeItemLayout 
+            aside={(selectedChannelId === channel.id && selectedTeamId === teamId) ? 
+              <ChevronRightRegular /> : null}
+          >
+            <div style={{marginLeft:'1.2vh'}}>
+              {channel.displayName}
+            </div>
           </TreeItemLayout>
         </TreeItem>
       ))}
