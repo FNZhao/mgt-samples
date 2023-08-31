@@ -35,7 +35,9 @@ const useStyles = makeStyles({
     '--file-list-box-shadow': 'none'
   }
 });
+
 let getAPIcontent: Array<{ api: string; type: string; }> = [];
+
 const ChannelsTree = (props) => {
   const [channels, setChannels] = React.useState<Channel[]>([]);
   const [loading , setLoading] = React.useState(false);
@@ -67,7 +69,13 @@ const ChannelsTree = (props) => {
   const getSelectedTeamChannel = (channelName, channelId) => {
     setSelectedTeamId(teamId);
     setSelectedChannelName(channelName);
-    setSelectedChannelId(channelId)
+    setSelectedChannelId(channelId);
+
+    let apiCon = [{
+      api: `https://graph.microsoft.com/v1.0/groups/${teamId}/drive/root:/${channelName}:/children`,
+      type: "GET"
+    }];
+    PubSub.publish("updateToastProps", apiCon);
   }
 
   React.useEffect(() => {
@@ -235,11 +243,13 @@ const getAllMyTeams = async (graph: IGraph, scopes: string[]) => {
     .select(['displayName', 'id'])
     .middlewareOptions(prepScopes(...scopes))
     .get();
-    let apiCon = [{
-        api: "https://graph.microsoft.com/beta//me/joinedTeams$select=displayName,id/",
-        type: "GET"
-    }];
-    PubSub.publish("updateToastProps", apiCon);
+
+  let apiCon = [{
+    api: "https://graph.microsoft.com/beta//me/joinedTeams$select=displayName,id/",
+    type: "GET"
+  }];
+  PubSub.publish("updateToastProps", apiCon);
+
   return teams?.value || [];
 };
 
@@ -250,13 +260,13 @@ const getTeamPhoto = async (graph: IGraph, teamId: string, scopes: string[]) => 
     .middlewareOptions(prepScopes(...scopes))
     .get()
     ) as Response;
-    //Delete comments when display API
-    //let apiCon = [{
-    //    api: "https://graph.microsoft.com/beta/teams/"+ teamId+"/photo/$value/",
-    //    type: "GET"
-    //}];
-    ////getAPIcontent.push(apiCon[0]);
-    //PubSub.publish("updateToastProps", apiCon);
+
+  let apiCon = [{
+    api: "https://graph.microsoft.com/beta/teams/"+ teamId+"/photo/$value/",
+    type: "GET"
+  }];
+  PubSub.publish("updateToastProps", apiCon);
+
   const blob = await blobToBase64(await response.blob());
   return blob;
 };
@@ -266,12 +276,12 @@ const getChannelsByTeam = async (graph: IGraph, teamId, scopes: string[]) => {
     .api(`/teams/${teamId}/channels`)
     .middlewareOptions(prepScopes(...scopes))
         .get();
-    //Delete comments when display API
-    let apiCon = [{
-        api: "https://graph.microsoft.com/beta//teams/"+ teamId+"/channels",
-        type: "GET"
-    }];
-    //getAPIcontent.push(apiCon[0]);
-    PubSub.publish("updateToastProps", apiCon);
+  
+  let apiCon = [{
+    api: "https://graph.microsoft.com/beta//teams/"+ teamId+"/channels",
+    type: "GET"
+  }];
+  PubSub.publish("updateToastProps", apiCon);
+
   return channels?.value || [];
 }
