@@ -58,14 +58,6 @@ export const ThemeSwitcher = () => {
     const [getStart, setStartdatetimeData] = useState(startdatetimeData);
     const [butNex, buttonTime] = useState(1);
     const [refreshKey, setRefreshKey] = useState(0);
-    /*    const [width, setWidth] = useState("100%");*/
-    // 子组件触发父组件
-    //const APIcontent = (message) => {
-    //    setAPIcontent(getAPIcontent => getAPIcontent.concat(message));
-    //};
-
-
-    //token: string | PubSubJS.SubscriptionListener<any> = '';
     const [token, setToken] = React.useState<string | PubSubJS.SubscriptionListener<any>>('');
 
     React.useEffect(() => {

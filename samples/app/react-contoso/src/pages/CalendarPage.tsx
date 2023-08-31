@@ -86,13 +86,10 @@ export const CalendarPage: React.FunctionComponent = () => {
     const APIcontent = (message) => {
         /* setAPIcontent((getAPIcontent) => [...getAPIcontent, ...message]);*/
         getAPIcontent.push(message);
-
     };
-
     const onTabSelect = (event: SelectTabEvent, data: SelectTabData) => {
         setSelectedTab(data.value);
     };
-
     const [getToken, setToken] = React.useState("");
     Providers.globalProvider.getAccessToken().then(result => {
         // Get token
@@ -157,10 +154,8 @@ export const CalendarPage: React.FunctionComponent = () => {
     };
 
 
-
     // Close And Clear APIContent
     const handleRemoveAPI = () => {
-
         setHandleRemoveAPI(false);
     };
 
@@ -168,7 +163,7 @@ export const CalendarPage: React.FunctionComponent = () => {
         enddatetimeData = getEnd;
         startdatetimeData = getStart;
     }, [currentDate, butNex, getEnd, getStart]);
-
+    //send data
     React.useEffect(() => {
         const subscriptionToken = PubSub.subscribe('ClearAPIdata', async (topic, data) => {
 
@@ -182,7 +177,7 @@ export const CalendarPage: React.FunctionComponent = () => {
     return (
         <>
             <div style={{ display: "flex" }}>
-                <div style={{ width: "100%", lineHeight: "30px", height: "100%" }}>
+                <div style={{ width: "98%", lineHeight: "30px", height: "100%" }}>
                     <PageHeader
                         title={'Calendar'}
                         description={'Stay productive and navigate your calendar appointments'}
@@ -272,6 +267,7 @@ const CalendarTemplate: React.FC<CalendarTemplateProps> = ({ onEventReceived, da
                 })
         }
     }, []);
+
 
     const buttonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
         setIsLoading(true);
@@ -376,7 +372,7 @@ const CalendarTemplate: React.FC<CalendarTemplateProps> = ({ onEventReceived, da
                             }
                         ],
                         temperature: 0.7,
-                        top_p: 0.95,
+                        top_p: 0.95, 
                         frequency_penalty: 0,
                         presence_penalty: 0,
                         max_tokens: 800,
@@ -398,45 +394,11 @@ const CalendarTemplate: React.FC<CalendarTemplateProps> = ({ onEventReceived, da
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'api-key': '5402ecbeeab345b2ae7f52cd1bbe8b46'
-
                                 }
                             }
                         );
                         const generatedAnswer = response.data.choices[0].message.content;
-                        const customAlert = (content) => {
-                            const dialog = document.createElement('div');
-                            dialog.style.backgroundColor = '#e6e6e6';
-                            dialog.style.width = '700px';
-                            dialog.style.padding = '20px';
-                            dialog.style.color = 'black';
-                            dialog.style.position = 'fixed';
-                            dialog.style.top = '10%';
-                            dialog.style.left = '50%';
-                            dialog.style.transform = 'translate(-50%, -50%)';
-                            dialog.style.display = 'flex';
-                            dialog.style.flexDirection = 'column';
-                            dialog.style.justifyContent = 'center';
-                            dialog.style.alignItems = 'center';
-                            dialog.style.borderRadius = '24px';
-
-                            const text = document.createElement('span');
-                            text.textContent = content;
-
-                            const button = document.createElement('button');
-                            button.textContent = 'OK';
-                            button.style.marginLeft = 'auto';
-                            button.style.marginTop = '20px';
-                            button.style.borderRadius = '10px';
-                            button.addEventListener('click', () => {
-                                document.body.removeChild(dialog);
-                            });
-
-                            dialog.appendChild(text);
-                            dialog.appendChild(button);
-                            document.body.appendChild(dialog);
-                        };
-
-                        customAlert(generatedAnswer);
+                        alert(generatedAnswer);
 
                     } catch (error) {
                         console.error(error);
