@@ -64,23 +64,19 @@ export const ThemeSwitcher = () => {
 
         const subscriptionToken = PubSub.subscribe('updateToastProps', async (topic, data) => {
             setAPIcontent(data);
-
         });
-
         return () => {
             PubSub.unsubscribe(subscriptionToken);
         };
     }, []);
+   
     //Close And Clear APIContent
     const handleRemoveAPI = () => {
         setAPIcontent([]);
         setHandleRemoveAPI(false);
        
     }
-    //const handleButtonClick = () => {
-    //    setHandleRemoveAPI(true);
-    //    setWidth("55%");
-    //};
+ 
     const onThemeChanged = (theme: any) => {
         setSelectedTheme(theme);
         // Applies the theme to the Fluent UI components

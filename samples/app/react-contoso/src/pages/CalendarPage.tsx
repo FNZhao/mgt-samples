@@ -65,6 +65,8 @@ const useStyles = makeStyles({
 });
 let getAPIcontent: Array<{ api: string; type: string; }> = [];
 export const CalendarPage: React.FunctionComponent = () => {
+    
+
     const styles = useStyles();
     const [selectedTab, setSelectedTab] = React.useState<TabValue>('focused');
     const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
@@ -112,7 +114,7 @@ export const CalendarPage: React.FunctionComponent = () => {
             type: "GET"
         }];
        //getAPIcontent.push(apiCo[0]);
-        PubSub.publish("updateToastProps", apiCo);
+        PubSub.publish("updateToastProps", apiCo );
 
     };
 
@@ -152,7 +154,6 @@ export const CalendarPage: React.FunctionComponent = () => {
         //getAPIcontent.push(apiCo[0])
         PubSub.publish("updateToastProps", apiCo);
     };
-
 
     // Close And Clear APIContent
     const handleRemoveAPI = () => {
